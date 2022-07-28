@@ -11,6 +11,7 @@ News
 
      <!-- Выводим товары, только если они есть с помощью тега if -->
 {% block content %}
+    <a href="/accounts/login"> Вход/регистрация</a>
     <h1>Все новости</h1>
     <h3>{% current_time '%b %d %Y' %}</h3>
     <h3> {{ next_news|default_if_none:"Скоро появятся самые свежие новости" }} </h3>
@@ -23,6 +24,7 @@ News
                 <td>Заголовок</td>
                 <td>Текст</td>
                 <td>Рейтинг</td>
+                <td>Автор</td>
             </tr>
             {% for post in news %}
             <tr>
@@ -30,6 +32,7 @@ News
                 <td>{{ post.title_post }}</td>
                 <td>{{ post.text_post|truncatechars:20 }}</td>
                 <td>{{ post.rating_post }}</td>
+                <td>{{ post.author }}</td>
             </tr>
             {% endfor %}
         </table>

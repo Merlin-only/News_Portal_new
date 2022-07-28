@@ -1,8 +1,9 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from .models import Post, Author
 from .filters import NewsFilter
-from .forms import PostForm
+from .forms import *
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 class NewsList(ListView):
@@ -33,10 +34,12 @@ class NewsDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'create.html'
+    permission_required = ('news.add_post', 'news.change_post')
+
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -54,14 +57,15 @@ class PostDeleteView(DeleteView):
     template_name = 'delete.html'
     success_url = reverse_lazy('home')
 
-# def post_create(request):
-#     if request.method == 'POST':
-#         form = PostForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect ('/news/')
-#
-#     form = PostForm()
-#     return render(request, 'create.html', {'form': form})
+class AuthorList(ListView):
+    model = Post
+    template_name = 'authory.html'
+    context_object_name = 'author'
+    paginate_by = 10
 
+
+class AuthorProtectedView(LoginRequiredMixin, TemplateView):
+    model = Author
+    template_name = 'author_edit.html'
+    fields = ['author_user']
 
