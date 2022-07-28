@@ -1,0 +1,32 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+<h1>Авторы</h1>
+<hr>
+{% if news %}
+        <table align="center" cellpadding="10">
+            <tr>
+                <td>ФИО</td>
+                <td>Рейтинг</td>
+            </tr>
+            {% for author in news %}
+            <tr>
+                <td>{{ post.author }}</td>
+                <td>{{ author.rating_author }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+       <!-- Если авторов нет, говорим, что авторов нет ;) -->
+        <h2>Авторов нет!</h2>
+    {% endif %}
+
+{{ author.author_user }}
+<hr>
+{% endblock content %}
