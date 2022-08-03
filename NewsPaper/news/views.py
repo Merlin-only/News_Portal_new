@@ -1,10 +1,12 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from .models import Post, Author
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
+from .models import Post, Author, Subscribers
 from .filters import NewsFilter
 from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
+from django.shortcuts import render, reverse, redirect
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 class NewsList(ListView):
     model = Post
@@ -69,3 +71,35 @@ class AuthorProtectedView(LoginRequiredMixin, TemplateView):
     template_name = 'author_edit.html'
     fields = ['author_user']
 
+
+class SubscribersView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'category_subscribers.html', {})
+
+    def post(self, request, *args, **kwargs):
+        subscribers = Subscribers(
+            user=request.POST['user'],
+            message=request.POST['category'],
+        )
+        subscribers.save()
+
+        # получаем наш html
+        html_content = render_to_string(
+            'subscribers_created.html',
+            {
+                'subscribers': subscribers,
+            }
+        )
+
+        # в конструкторе уже знакомые нам параметры, да? Называются правда немного по другому, но суть та же.
+        msg = EmailMultiAlternatives(
+            subject=f'{subscribers.user}',
+            body=subscribers.category,
+            from_email='***@yandex.ru',
+            to=['efremova.alevtina@gmail.com'],  # это то же, что и recipients_list
+        )
+        msg.attach_alternative(html_content, "text/html")  # добавляем html
+
+        msg.send()  # отсылаем
+
+        return redirect('subscribers:category_subscribers')

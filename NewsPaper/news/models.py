@@ -35,6 +35,7 @@ class Author(models.Model):
 class Category(models.Model):
     # pass
     name_of_category = models.CharField(max_length=64, unique=True, verbose_name = 'Категория')
+    subscribe = models.ManyToManyField(User, through='Subscribers', blank=True)
 
     def __str__(self):
         return self.name_of_category
@@ -43,6 +44,16 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+class Subscribers (models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name = 'Пользователь')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, verbose_name = 'Категория')
+
+    class Meta:
+        verbose_name = 'Пользователь/Категория'
+        verbose_name_plural = 'Пользователи/Категории'
+
+    def __str__(self):
+        return f' {self.user}: {self.category}'
 
 class Post (models.Model):
     #pass
@@ -53,6 +64,7 @@ class Post (models.Model):
     text_post = models.TextField(verbose_name = 'Текст')
     rating_post = models.SmallIntegerField(default=0, verbose_name = 'Рейтинг статьи')
     category = models.ManyToManyField(Category, through='PostCategory', verbose_name = 'Категория')
+    isUpdated = models.BooleanField(default=False)
 
     def like(self):
         self.rating_post += 1

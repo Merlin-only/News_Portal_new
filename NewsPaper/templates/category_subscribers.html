@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+News
+{% endblock title %}
+
+{% block content %}
+    <h1>Выбирете категорию</h1>
+
+    <form action="" method="category">
+        {{ form.as_p }}
+        <input type="submit" value="Подписаться"/>
+   </form>
+{% endblock content %}
