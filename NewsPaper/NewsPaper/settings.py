@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
+
+root = environ.Path(__file__) - 3  # get root of the project
+env = environ.Env()
+environ.Env.read_env()  # reading .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.conf.global_settings import EMAIL_HOST_USER
@@ -26,6 +31,7 @@ SECRET_KEY = 'django-insecure-=a+-c+$h%=a)mj%%6h@3542_r^*0*6p!&=35b_$&b%viycia8u
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -63,7 +69,7 @@ APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 DEFAULT_FROM_EMAIL = 'info@water-travel.ru'
 EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты для всех один и тот же
 EMAIL_PORT = 465
-EMAIL_HOST_PASSWORD = '19in29mart'  # пароль от почты
+EMAIL_HOST_PASSWORD = 'admin123'  # пароль от почты
 EMAIL_USE_SSL = True
 
 SITE_ID = 1
@@ -175,3 +181,9 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

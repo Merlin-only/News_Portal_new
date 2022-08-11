@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser, AbstractUser
 from news.resources import CATEGORY_CHOICES, news, article
 from django.db.models import Sum
 from django.urls import reverse

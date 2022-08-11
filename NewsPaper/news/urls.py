@@ -1,6 +1,7 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import *
+from .views import IndexView, NewsList, SearchList, NewsDetail, PostCreate, PostUpdateView, PostDeleteView, \
+    AuthorList, AuthorProtectedView, SubscribersView
 
 
 urlpatterns = [
@@ -18,4 +19,5 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='delete'),
     path('authory/', AuthorList.as_view(), name='authory'),
     path('author_edit/<int:pk>', AuthorProtectedView.as_view(), name='author_edit'),
+    path('email', IndexView.as_view(), name='subscribes_message_weekly'),
 ]

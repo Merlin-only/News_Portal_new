@@ -2,11 +2,14 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 from .models import Post, Author, Subscribers
 from .filters import NewsFilter
-from .forms import *
+from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, reverse, redirect
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.http import HttpResponse
+from django.views import View
+from .tasks import send_email_add_news, send_email_week
 
 class NewsList(ListView):
     model = Post
@@ -103,3 +106,9 @@ class SubscribersView(View):
         msg.send()  # отсылаем
 
         return redirect('subscribers:category_subscribers')
+
+class IndexView(View):
+    def get(self, request):
+        send_email_week.delay()
+        send_email_add_news.delay()
+        return HttpResponse('message')
