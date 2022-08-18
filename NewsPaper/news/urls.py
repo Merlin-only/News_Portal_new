@@ -2,6 +2,7 @@ from django.urls import path
 # Импортируем созданное нами представление
 from .views import IndexView, NewsList, SearchList, NewsDetail, PostCreate, PostUpdateView, PostDeleteView, \
     AuthorList, AuthorProtectedView, SubscribersView
+from django.views.decorators.cache import cache_page
 
 
 urlpatterns = [
@@ -11,8 +12,8 @@ urlpatterns = [
    # Т.к. наше объявленное представление является классом,
    # а Django ожидает функцию, нам надо представить этот класс в виде view.
    # Для этого вызываем метод as_view.
-    path('', NewsList.as_view(), name='home'),
-    path('post/<int:pk>', NewsDetail.as_view(), name='post'),
+    path('', cache_page(60*5)(NewsList.as_view()), name='home'),
+    path('post/<int:pk>', cache_page(60*5)(NewsDetail.as_view()), name='post'),
     path('search/', SearchList.as_view(), name='search'),
     path('create/', PostCreate.as_view(), name='create'),
     path('post/<int:pk>/edit/', PostUpdateView.as_view(), name='edit'),
