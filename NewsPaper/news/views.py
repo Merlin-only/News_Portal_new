@@ -12,6 +12,9 @@ from django.views import View
 from .tasks import send_email_add_news, send_email_week
 from django.core.cache import cache
 
+import logging
+logger = logging.getLogger(__name__)
+
 class NewsList(ListView):
     model = Post
     data = '-data_create_post'
